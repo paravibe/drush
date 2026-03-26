@@ -75,7 +75,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function getParameterOption(string|array $values, string|bool|int|float|array|null $default = false, bool $onlyParams = false)
+    public function getParameterOption(string|array $values, string|bool|int|float|array|null $default = false, bool $onlyParams = false): mixed
     {
         $values = (array) $values;
 
@@ -91,7 +91,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function bind(InputDefinition $definition)
+    public function bind(InputDefinition $definition): void
     {
         // no-op: this class exists to avoid validation
     }
@@ -99,7 +99,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function validate()
+    public function validate(): void
     {
         // no-op: this class exists to avoid validation
     }
@@ -115,7 +115,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function getArgument(string $name)
+    public function getArgument(string $name): mixed
     {
         // TODO: better to throw if an argument that does not exist is requested?
         return isset($this->arguments[$name]) ? $this->arguments[$name] : '';
@@ -124,7 +124,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function setArgument(string $name, mixed $value)
+    public function setArgument(string $name, mixed $value): void
     {
         $this->arguments[$name] = $value;
     }
@@ -148,7 +148,7 @@ class DrushInputAdapter implements InputInterface
     /**
      *  {@inheritdoc}
      */
-    public function getOption($name)
+    public function getOption($name): mixed
     {
         return $this->options[$name];
     }
@@ -183,5 +183,10 @@ class DrushInputAdapter implements InputInterface
     public function setInteractive($interactive): void
     {
         $this->interactive = $interactive;
+    }
+
+    public function __toString(): string
+    {
+        return '';
     }
 }
