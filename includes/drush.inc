@@ -278,6 +278,7 @@ function drush_get_global_options($brief = FALSE) {
   $options['simulate']           = array('short-form' => 's', 'context' => 'DRUSH_SIMULATE', 'never-propagate' => TRUE, 'description' => "Simulate all relevant actions (don't actually change the system).");
   $options['pipe']               = array('short-form' => 'p', 'hidden' => TRUE, 'description' => "Emit a compact representation of the command for scripting.");
   $options['help']               = array('short-form' => 'h', 'description' => "This help system.");
+  $options['output-json']        = array('short-form' => 'j', 'description' => "Output as json.");
 
   if (!$brief) {
     $options['version']            = array('description' => "Show drush version.");
@@ -1278,7 +1279,8 @@ function drush_log($message, $type = LogLevel::NOTICE, $error = null) {
  * Future: add some sort of dependency injection to Drush.
  */
 function _drush_create_default_logger() {
-  $drush_logger = new Logger();
+  $json_format = drush_get_option('output-json', '');
+  $drush_logger = new Logger($json_format ? 'json' : 'text');
   drush_set_context('DRUSH_LOGGER', $drush_logger);
   drush_set_context('DRUSH_LOG_CALLBACK', $drush_logger);
 }

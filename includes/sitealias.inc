@@ -10,7 +10,7 @@
  */
 
 use Drush\Log\LogLevel;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Check to see if the user specified an alias

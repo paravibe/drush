@@ -12,7 +12,7 @@
 
 use Drush\Drush;
 use Drush\Log\LogLevel;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Log PHP errors to the Drush log. This is in effect until Drupal's error
@@ -519,11 +519,11 @@ function drush_build_drush_command($drush_path = NULL, $php = NULL, $os = NULL, 
  * Cygwin or the MSYSGIT shell.  If you care
  * which is which, test mingw first.
  */
-function drush_is_cygwin($os = NULL) {
+function drush_is_cygwin($os = '') {
   return _drush_test_os($os, array("CYGWIN","CWRSYNC","MINGW"));
 }
 
-function drush_is_mingw($os = NULL) {
+function drush_is_mingw($os = '') {
   return _drush_test_os($os, array("MINGW"));
 }
 
@@ -538,7 +538,7 @@ function drush_get_tar_executable() {
  * Check if the operating system is OS X.
  * This will return TRUE for Mac OS X (Darwin).
  */
-function drush_is_osx($os = NULL) {
+function drush_is_osx($os = '') {
   return _drush_test_os($os, array("DARWIN"));
 }
 
@@ -547,7 +547,7 @@ function drush_is_osx($os = NULL) {
  *
  * MinGW has bash, but PHP isn't part of MinGW and hence doesn't run in bash.
  */
-function drush_has_bash($os = NULL) {
+function drush_has_bash($os = '') {
   return (drush_is_cygwin($os) && !drush_is_mingw($os)) || !drush_is_windows($os);
 }
 
@@ -573,7 +573,7 @@ function drush_bit_bucket() {
  *   CYGWIN
  *   MINGW* (e.g. MINGW32)
  */
-function _drush_get_os($os = NULL) {
+function _drush_get_os($os = '') {
   // The special os "CWRSYNC" can be used to indicate that we are testing
   // a path that will be passed as an argument to cwRsync, which requires
   // that the path be converted to /cygdrive/c/path, even on DOS or Powershell.

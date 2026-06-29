@@ -150,11 +150,9 @@ function drush_get_bootstrap_candidate_classnames() {
   if ($bootstrap_class) {
     array_unshift($candidates, $bootstrap_class);
   }
-  // Add candidate bootstrap classes for Drupal
-  foreach (array('8', '7', '6') as $version) {
-    $drupal_bootstrap_class = 'Drush\Boot\DrupalBoot' . $version;
-    $candidates[] = $drupal_bootstrap_class;
-  }
+
+  $candidates[] = 'Drush\Boot\DrupalBoot7';
+
   // Always consider our default bootstrap class last.
   $candidates[] = 'Drush\Boot\EmptyBoot';
 

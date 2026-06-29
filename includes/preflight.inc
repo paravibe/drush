@@ -150,6 +150,32 @@ function drush_preflight_prepare() {
   // for forwards-compatibility
   drush_set_option('drush.vendor-dir', dirname($vendor_path));
 
+  // For backwards compatibility. Prefer the static accessors.
+  if (!defined('DRUSH_VERSION')) {
+    define('DRUSH_VERSION', Drush::getVersion());
+    define('DRUSH_MAJOR_VERSION', Drush::getMajorVersion());
+    define('DRUSH_MINOR_VERSION', Drush::getMinorVersion());
+
+    define('DRUSH_REQUEST_TIME', microtime(TRUE));
+  }
+
+  drush_set_context('argc', $GLOBALS['argc']);
+  drush_set_context('argv', $GLOBALS['argv']);
+
+  // Make a read-only copy of the arguments at runtime.argv
+  // for forwards-compatibility
+  drush_set_option('runtime.argv', $GLOBALS['argv']);
+
+  // We need some global options/arguments processed at this early stage.
+  drush_parse_args();
+
+  // Process initial global options such as --debug.
+  _drush_preflight_global_options();
+
+  // Set an error handler and a shutdown function
+  set_error_handler('drush_error_handler');
+  register_shutdown_function('drush_shutdown');
+
   // Can't log until we have a logger, so we'll create this ASAP.
   _drush_create_default_logger();
 
@@ -173,31 +199,6 @@ function drush_preflight_prepare() {
   if (!$return = _drush_environment_check_php_ini()) {
     return; // An error was logged.
   }
-
-  // For backwards compatibility. Prefer the static accessors.
-  if (!defined('DRUSH_VERSION')) {
-    define('DRUSH_VERSION', Drush::getVersion());
-    define('DRUSH_MAJOR_VERSION', Drush::getMajorVersion());
-    define('DRUSH_MINOR_VERSION', Drush::getMinorVersion());
-
-    define('DRUSH_REQUEST_TIME', microtime(TRUE));
-  }
-
-  drush_set_context('argc', $GLOBALS['argc']);
-  drush_set_context('argv', $GLOBALS['argv']);
-
-  // Make a read-only copy of the arguments at runtime.argv
-  // for forwards-compatibility
-  drush_set_option('runtime.argv', $GLOBALS['argv']);
-
-  // Set an error handler and a shutdown function
-  set_error_handler('drush_error_handler');
-  register_shutdown_function('drush_shutdown');
-  // We need some global options/arguments processed at this early stage.
-  drush_parse_args();
-
-  // Process initial global options such as --debug.
-  _drush_preflight_global_options();
 
   drush_log(dt("Drush preflight prepare loaded autoloader at !autoloader", array('!autoloader' => realpath($vendor_path))), LogLevel::PREFLIGHT);
 }
